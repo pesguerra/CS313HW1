@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <time.h>
 using namespace std;
 /*
 	@Ahmed Fathalla
@@ -25,6 +26,7 @@ void InsertionSort(int arr[ROWS][COLUMNS], int arrSize);
 void bubbleSort(int arr[ROWS][COLUMNS], int arrSize);
 
 int main() {
+    srand(time(nullptr));
     cout << "===================" << endl;
     cout << "Selection sort" << endl;
     cout << "===================" << endl;
@@ -68,20 +70,18 @@ int main() {
     return 0;
 }
 
-//Gets elements from user as input.
+//Fills the matrix with random elements
 void fill(int arr[ROWS][COLUMNS]) {
-    
-	int value;
+    int size = 100;
 	for (int i = 0; i < ROWS; i++)
 	{
 		for (int j = 0; j < COLUMNS; j++) {
-            cin >> arr[i][j];
+           arr[i][j] = rand() % size + 1;;
            
 		}
 	}
     cout << endl;
 }
-
 //Displays elements in 2D matrix.
 void display(int arr[ROWS][COLUMNS]) {
 	for (int i = 0; i < 3; i++)

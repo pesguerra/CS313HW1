@@ -8,13 +8,6 @@ using namespace std;
 	@Group 6
 	@Date: 3/11/21
 */
-/*
-	1.Create a 2D array.
-	2.Get user input for values.
-	3.Iterate through the rows and columns
-	4.Fill in the array with user input.
-	5.Use all three sorts to sort the array in an ascending order.
-*/
 
 const int ROWS = 3;
 const int COLUMNS = 3;

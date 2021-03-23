@@ -119,8 +119,6 @@ void SelectionSort(int arr[ROWS][COLUMNS], int arrSize)
     }
     cout << "res" << endl;
 }
-//Explain in white paper, put it on stackoverflow
-
 
 void InsertionSort(int arr[ROWS][COLUMNS], int arrSize)
 {

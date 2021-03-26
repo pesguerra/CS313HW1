@@ -6,15 +6,11 @@
 *	HW 1 Program 2
 *	Test whether a recursive, iterative or linked-type binary search is faster by testing it on
 *	arrays of sizes 1 million and 10 million with arrays that are filled with random numbers.
-*	You will need to either fill it in a ‚Äúsorted way‚Äù or sort it before doing the binary search.
+*	You will need to either fill it in a ìsorted wayî or sort it before doing the binary search.
 */
 
 #include <iostream>
 #include <chrono>
-#include <list>
-#include <vector>
-#include <stdio.h>
-#include <stdlib.h>
 #include <algorithm>
 
 using namespace std::chrono;
@@ -28,48 +24,48 @@ public:
 };
 
 //function to insert a node
-void insert(Node** root, int item)
+void insert(Node** head, int val)
 {
     Node* temp = new Node;
     Node* ptr;
-    temp->data = item;
+    temp->data = val;
     temp->next = NULL;
   
-    if (*root == NULL)
-        *root = temp;
+    if (*head == NULL)
+        *head = temp;
     else {
-        ptr = *root;
+        ptr = *head;
         while (ptr->next != NULL)
             ptr = ptr->next;
         ptr->next = temp;
     }
 }
 
-//function to fill a Linked List with values from an array passed through the parameter
-Node *arrayToList(int arr[], int n)
+//function to fill a Linked List with values from an array passed through the parameter along with the size of the array
+Node *arrayToList(int arr[], int size)
 {
-    Node *root = NULL;
-    for (int i = 0; i < n; i++)
-        insert(&root, arr[i]);
-   return root;
+    Node *head = NULL;
+    for (int i = 0; i < size; i++) {
+        insert(&head, arr[i]);
+    }
+    return head;
 }
 
-//function to find the middle element of the passed Linked List
+//function to find the middle element of the passed Linked List using the fast and slow pointers concept
 Node* middle(Node* start, Node* last) 
 { 
     if (start == NULL) 
         return NULL; 
   
     Node* slow = start; 
-    Node* fast = start -> next; 
+    Node* fast = start; 
   
-    while (fast != last) 
-    { 
-        fast = fast -> next; 
+    while (fast != last && fast->next != last) 
+    {  
         if (fast != last) 
         { 
             slow = slow -> next; 
-            fast = fast -> next; 
+            fast = fast -> next -> next; 
         } 
     } 
   
@@ -77,63 +73,55 @@ Node* middle(Node* start, Node* last)
 }
 
 //function to implement a binary search using the Linked List data structure 
-Node* linkedBinary(Node *head, int value) 
+Node* linkedBinary(Node *head, int val) 
 { 
     Node* start = head; 
     Node* last = NULL; 
-  
+
     do
     { 
-        // Find middle 
         Node* mid = middle(start, last); 
-  
-        // If middle is empty 
         if (mid == NULL) 
-            return NULL; 
-  
-        // If value is present at middle 
-        if (mid -> data == value) 
+            return NULL;
+            
+        if (mid -> data == val) 
             return mid; 
-  
-        // If value is more than mid 
-        else if (mid -> data < value) 
-            start = mid -> next; 
-  
-        // If the value is less than mid. 
+        else if (mid -> data < val) 
+            start = mid -> next;  
         else
             last = mid; 
   
     } while (last == NULL || (last != start)); 
   
-    // value not present 
+    // When value not found 
     return NULL; 
 } 
 
 //function to implement a recursive binary search
 //output is the index at which the desired int x is found or -1 which indicates not found inside passed array
-int recursive(int arr[], int l, int r, int x) {	
+int recursive(int arr[], int l, int r, int val) {	
 	if (r >= l) { 
         int mid = l+(r-l) / 2; 
-        if (arr[mid] == x) {
+        if (arr[mid] == val) {
             return mid;
         }
-		if (arr[mid] < x) {
-        	return recursive(arr, mid+1, r, x); 
+		if (arr[mid] < val) {
+        	return recursive(arr, mid+1, r, val); 
 		}
-        return recursive(arr, l, mid-1, x);
+        return recursive(arr, l, mid-1, val);
     } 
     return -1;
 }
 
 //function to implement an iterative binary search
 //output is the index at which the desired int x is found or -1 which indicates not found inside passed array
-int iterative(int arr[], int l, int r, int x) {
+int iterative(int arr[], int l, int r, int val) {
 	while (l <= r) { 
         int mid = l+(r-l) / 2; 
-        if (arr[mid] == x) {
+        if (arr[mid] == val) {
             return mid;
         }
-        if (arr[mid] < x) {
+        if (arr[mid] < val) {
             l = mid+1;
         }
         else {
@@ -147,14 +135,14 @@ int iterative(int arr[], int l, int r, int x) {
 int main() {
 	
 	//Declare const sizes to be used
-	int const SIZE1 = 100000;
-	int const SIZE2 = 100000;
+	int const SIZE1 = 1000000;
+	int const SIZE2 = 10000000;
 	//arbitrary int value to search for
 	int const VAL = 12345;
 	
-	//Declare arrays of sizes 1 million and 10 million on heap
-	int arr1[SIZE1];
-	int arr2[SIZE2];
+	//Declare and instantiate arrays of sizes 1 million and 10 million on heap
+	int *arr1 = new int[SIZE1];
+	int *arr2 = new int[SIZE2];
 	
 	srand(time(nullptr));
 	
@@ -183,10 +171,15 @@ int main() {
 	//Create linked lists from the sorted arrays
 	start = high_resolution_clock::now();
 	Node *head1 = arrayToList(arr1, SIZE1);
+	stop = high_resolution_clock::now();
+	duration = duration_cast<microseconds>(stop - start);
+	cout << "Time it took to create Linked Lists from sorted array of size 1 million: " << duration.count() << " microseconds" << endl;
+	
+	start = high_resolution_clock::now();
 	Node *head2 = arrayToList(arr2, SIZE2);
 	stop = high_resolution_clock::now();
 	duration = duration_cast<microseconds>(stop - start);
-	cout << "Time it took to create Linked Lists from sorted arrays: " << duration.count() << " microseconds" << endl;
+	cout << "Time it took to create Linked Lists from sorted array of size 10 million: " << duration.count() << " microseconds" << endl;
 	cout << "-------------------------------------------------------------------------------------" << endl << endl;
 	
 	//test recursive search method and display time it took to execute
@@ -229,7 +222,7 @@ int main() {
 	cout << "Binary Search using a Linked List of value: 12345" << endl;
 	start = high_resolution_clock::now();
 	if (linkedBinary(head1, VAL) == NULL) 
-        cout << "Value not present" << endl; 
+        cout << "Value not found" << endl; 
     else
         cout << "Value found" << endl;
 	stop = high_resolution_clock::now();
@@ -238,12 +231,16 @@ int main() {
 	
 	start = high_resolution_clock::now();
 	if (linkedBinary(head2, VAL) == NULL) 
-        cout << "Value not present" << endl; 
+        cout << "Value not found" << endl; 
     else
         cout << "Value found" << endl;
 	stop = high_resolution_clock::now();
 	duration = duration_cast<microseconds>(stop - start);
 	cout << "Time it took to perform a linked list type binary search of size 10 million: " << duration.count() << " microseconds" << endl;
+	
+	//clean memory
+	delete [] arr1;
+	delete [] arr2;
 	
 	return 0;
 }

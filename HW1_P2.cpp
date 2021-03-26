@@ -6,7 +6,7 @@
 *	HW 1 Program 2
 *	Test whether a recursive, iterative or linked-type binary search is faster by testing it on
 *	arrays of sizes 1 million and 10 million with arrays that are filled with random numbers.
-*	You will need to either fill it in a ìsorted wayî or sort it before doing the binary search.
+*	You will need to either fill it in a ‚Äúsorted way‚Äù or sort it before doing the binary search.
 */
 
 #include <iostream>

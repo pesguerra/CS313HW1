@@ -9,14 +9,12 @@
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <vector>
 using namespace std;
-  
-// The vector v stores current subset.
-void printAllSubsetsRec(int arr[], int n, vector<int> v,
-                        int sum)
-{
+
+//templated class to find all subsets of array that will sum any given int passed and print it
+template <class T>
+void printAllSubsets(T arr[], T size, vector<T> v, T sum) {
     // If remaining sum is 0, then print all
     // elements of current subset.
     if (sum == 0) {
@@ -27,29 +25,23 @@ void printAllSubsetsRec(int arr[], int n, vector<int> v,
         return;
     }
   
-    // If no remaining elements,
-    if (n == 0)
+    // Base Case of no more elements remaining
+    if (size == 0)
         return;
   
-    // We consider two cases for every element.
-    // a) We do not include last element.
-    // b) We include last element in current subset.
-    printAllSubsetsRec(arr, n - 1, v, sum);
-    v.push_back(arr[n - 1]);
-    printAllSubsetsRec(arr, n - 1, v, sum - arr[n - 1]);
+    //2 recursion calls because there are 2 cases for every element
+	//a case for including the last element and a case not including the last element 
+	//when the case calls for the last element to be included it is pushed to the vector v and the targeted sum is decreased
+    printAllSubsets(arr, size - 1, v, sum);
+    v.push_back(arr[size - 1]);
+    printAllSubsets(arr, size - 1, v, sum - arr[size - 1]);
 }
-  
-// Wrapper over printAllSubsetsRec()
-void printAllSubsets(int arr[], int n, int sum)
-{
-    vector<int> v;
-    printAllSubsetsRec(arr, n, v, sum);
-}
-  
+
 int main()
 {
-    //declare necessary variables
+	//declare necessary variables
 	int size, val;
+	vector<int> v;
 	srand(time(nullptr));
 	
 	//get user input for the size of array
@@ -72,6 +64,8 @@ int main()
 	//get user input for the targeted value being searched
 	cout << "Enter a value to find the subset sum of: " << endl;
 	cin >> val;
-    printAllSubsets(arr, size, val);
+	
+    printAllSubsets<int>(arr, size, v, val);
+
     return 0;
 }
